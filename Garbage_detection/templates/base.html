@@ -1,0 +1,124 @@
+{% load static %}
+
+{% load user_tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <meta charset="UTF-8">
+    <title>{% block title %}Garbage Detection Dashboard{% endblock %}</title>
+
+    <!-- Style CSS -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+    {% block extra_css %}{% endblock %}
+    <meta name="csrf-token" content="{{ csrf_token }}">
+
+
+  
+</head>
+
+<body>
+  
+
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top" style="background-color: #4CAF50;">
+
+  <div class="container">
+    <a class="navbar-brand fw-bold" href="{% url 'home_page' %}">Garbage Detection</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        {% if user.is_authenticated %}
+
+            {% if user.is_superuser %}
+
+                {% if request.path == '/list/' %}
+                <!-- On All Detections page, show Home -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'home_page' %}" style="color: #fbfcfc;">Home</a>
+                    </li>
+                {% else %}
+                <!-- On other pages, show All Detections -->
+                    <li class="nav-item">
+                         <a class="nav-link" href="{% url 'detection_list' %}" style="color: #fbfcfc;">All Detections</a>
+                    </li>
+                
+
+                {% endif %}
+            {% endif %}
+            {% if user|has_group:"Workers" %}
+                {% if request.path == '/list/' %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'home_page' %}" style="color: #fbfcfc;">Home</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'detection_list' %}" style="color: #fbfcfc;">All Detections</a>
+                    </li>
+                {% endif %}
+            {% endif %}
+            <li class="nav-item">
+                <form method="post" action="{% url 'logout' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="nav-link btn btn-link" style="padding: 0; margin: 0;position: relative;top:7px; color: #fdfffe;">
+                        Logout
+                    </button>
+                </form>
+            </li>
+        {% else %}
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'login' %}">Login</a>
+            </li>
+        {% endif %}
+
+</nav>
+
+    
+
+    <!-- Main Content -->
+    <div class="content">
+        {% block content %}{% endblock %}
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2025 Garbage Detection Project</p>
+    </footer>
+
+  
+
+    <script>
+        const csrfToken = '{{ csrf_token }}';
+function updateStatus(detectionId, newStatus) {
+    console.log("Updating status for", detectionId, "to", newStatus);
+    fetch(`/update_status/${detectionId}/`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token }}'
+           
+
+        },
+        body: JSON.stringify({ status: newStatus })
+    })
+    .then(response => {
+        if (!response.ok) {
+            alert("Error updating status.");
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>
+
+

@@ -1,0 +1,308 @@
+{% extends 'base.html' %}
+{% load user_tags %}
+
+<!-- {% block title %}Today's Detections{% endblock %} -->
+
+{% block content %}
+
+<!-- BUTTON HERE -->
+  <div style="text-align: right; margin: 10px 0;">
+    <a href="{% url 'daily_map' %}" style="background-color: #4e5350; color: white; padding: 8px 12px; text-decoration: none; border-radius: 4px;position: relative; top: 140px;margin-right: 80px;">
+      Today Map
+    </a>
+  </div>
+
+<div class="container">     
+  <div class="mt-4 mb-4">
+    {% if message %}
+      <div class="alert alert-success">{{ message }}</div>
+    {% endif %}
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="video" class="form-label">Select Video</label>
+            <input type="file" name="video" class="form-control" id="video" required>
+        </div>
+        <button type="submit" class="btn" style="background-color: #4e5350; color: white; border: none;">
+             Upload & Process
+        </button>
+     </form>
+  </div>
+
+
+
+
+<!-- Collapsible Previous Pending Detections Button -->
+<!-- <button class="btn mt-4"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#previousPending"
+        aria-expanded="false"
+        aria-controls="previousPending"
+        style="background-color: #4e5350; color: white;">
+  Previous
+</button> -->
+
+<!-- Collapsible Table Div -->
+<!-- <div class="collapse mt-3" id="previousPending"> -->
+
+
+<ul class="nav nav-tabs" id="detectionTabs" role="tablist">
+  <li class="nav-item" role="presentation">
+    <button class="nav-link active" id="today-tab" data-bs-toggle="tab" data-bs-target="#today" type="button" role="tab" aria-controls="today" aria-selected="true">
+      Today's Detections
+    </button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link" id="previous-tab" data-bs-toggle="tab" data-bs-target="#previous" type="button" role="tab" aria-controls="previous" aria-selected="false">
+      Previous Pending
+    </button>
+  </li>
+</ul>
+<!-- ************************************************************************************************ -->
+
+{% if detections_today %}
+  {% if detection_count %}
+    <p>Total Detections this upload: {{ detection_count }}</p>
+  {% endif %}
+
+  
+
+ 
+  <table class="table table-striped table-hover">
+    
+  </table>
+{% else %}
+  <p>No detections today.</p>
+{% endif %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- ******************************************************************************************************** -->
+
+<div class="tab-content" id="detectionTabsContent">
+  <!-- Today's detections tab -->
+  <div class="tab-pane fade show active" id="today" role="tabpanel" aria-labelledby="today-tab">
+    {% if detections_today %}
+      {% if detection_count %}
+        <p>Total Detections this upload: {{ detection_count }}</p>
+      {% endif %}
+    
+    <form method="post" action="{% url 'delete_cleaned' %}">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-primary float-end"style="background-color: #4e5350; color: white; position: relative; top: -230px;border: none; box-shadow: none; margin-left: 70px;">Remove All Verified Cleaned</button>
+    </form>
+
+    <!-- This is today's table -->
+    <!-- This is today's table -->
+
+    <table class="table table-striped table-hover">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Image</th>
+          <!-- <th>Latitude</th>
+          <th>Longitude</th> -->
+          <th>Verification / Upload</th>
+          <th>Address</th> 
+          <th>Detected At</th>
+          <th>Status</th>
+          <th>Map</th>
+        </tr>
+        
+      </thead>
+     <tbody>
+        {% for detection in detections_today %}
+          <tr>
+            <td>{{ forloop.counter }}</td>
+              <td>
+                {% if detection.image %}
+                  <img src="{{ detection.image.url }}" alt="Detection Image" width="150">
+                {% else %}
+                  No Image
+                {% endif %}
+              </td>
+
+
+            <!-- <td>{{ detection.latitude }}</td>
+            <td>{{ detection.longitude }}</td> -->
+
+
+              <td>
+                {% if detection.verify %}
+                  <img src="{{ detection.verify.url }}" alt="Verification Image" width="150">
+                {% else %}
+                  No Verification Image
+                {% endif %}
+                <form method="POST" action="{% url 'upload_detection_image' detection.id %}" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <input type="file" name="image" required> <br>
+                    <button type="submit" class="btn btn-sm btn-primary">Upload</button>
+                </form>
+              </td>
+             
+              
+              <td style="max-width: 200px; overflow-wrap: break-word;">
+                {{ detection.address }}
+              </td>
+
+              <td>{{  detection.detections_today  }}</td>
+              <td>
+               {% if user.is_superuser %}
+                  <form method="POST" action="{% url 'update_status' detection.id %}">
+                     {% csrf_token %}
+                            <select name="status" onchange="this.form.submit()">
+                              <option value="pending" {% if detection.status == 'pending' %}selected{% endif %}>Pending</option>
+                              <option value="in_progress" {% if detection.status == 'in_progress' %}selected{% endif %}>In Progress</option>
+                              <option value="cleaned" {% if detection.status == 'cleaned' %}selected{% endif %}>Cleaned</option>
+                            </select>
+                  </form>
+                {% else %}
+                  {{ detection.status }}
+                {% endif %}
+                
+              </td>
+
+              <td><a href="{% url 'map_location' detection.id %}">View Map</a></td>
+            
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+
+
+    {% else %}
+      <p>No detections today.</p>
+    {% endif %}
+
+<!-- *************************************************************** -->
+
+ 
+
+<!-- *********************************************************************** -->
+
+ </div> <!--  End of today tab-pane -->
+
+
+
+    <!-- Previous pending tab -->
+  <div class="tab-pane fade" id="previous" role="tabpanel" aria-labelledby="previous-tab">
+    {% if previous_pending %}
+      <!-- 🔽 Your entire previous_pending table here -->
+      
+    <table class="table table-striped table-hover">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Detection Image</th>
+          <th>Verification / Upload</th>
+          <th>Address</th>
+          <th>Detected At</th>
+          <th>Status</th>
+          <th>Map</th>
+         </tr>
+      </thead>
+
+    <tbody>
+      {% for detection in previous_pending %}
+        <tr>
+          <td>{{ forloop.counter }}</td>
+          <td>
+            {% if detection.image %}
+              <img src="{{ detection.image.url }}" alt="Detection Image" width="150">
+            {% else %}
+              No Image
+            {% endif %}
+          </td>
+
+         <!-- 2. Verification Image column -->
+          <td>
+            {% if detection.verify %}
+              <img src="{{ detection.verify.url }}" alt="Verification Image" width="150">
+            {% else %}
+              No Verification Image
+            {% endif %}
+              <form method="POST" action="{% url 'upload_detection_image' detection.id %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="file" name="image" required> <br>
+                <button type="submit" class="btn btn-sm btn-primary">Upload</button>
+              </form>
+          </td>
+
+            <!-- <td>{{ detection.latitude }}</td> -->
+            <!-- <td>{{ detection.longitude }}</td> -->
+        
+
+
+
+          <td style="max-width: 200px; overflow-wrap: break-word;">
+            {{ detection.address }}
+          </td>
+
+          <td>{{ detection.detections_today }}</td>
+            <!-- <td>{{ detection.status }}</td> -->
+          
+          <td>
+            {% if not user|has_group:"Workers" %}
+              <form method="POST" action="{% url 'update_status' detection.id %}">
+                {% csrf_token %}
+                <select name="status" onchange="this.form.submit()">
+                <option value="pending" {% if detection.status == 'pending' %}selected{% endif %}>Pending</option>
+                <option value="in_progress" {% if detection.status == 'in_progress' %}selected{% endif %}>In Progress</option>
+                <option value="cleaned" {% if detection.status == 'cleaned' %}selected{% endif %}>Cleaned</option>
+                </select>
+              </form>
+            
+            {% else %}
+                {{ detection.status }}
+            {% endif %}
+           
+          </td>
+
+           <td><a href="{% url 'map_location' detection.id %}">View Map</a></td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+
+  {% else %}
+    <p>No previous pending detections.</p>
+  {% endif %}
+  </div>   <!--  End of previous tab-pane -->
+
+</div> <!-- End of tab-content -->
+
+<!-- {% if detections_today  %}
+  <div style="text-align: right; margin: 10px 0;">
+    <a href="{% url 'daily_map' %}" style="background-color: #4e5350; color: white; padding: 8px 12px; text-decoration: none; border-radius: 4px;">
+  Today Map
+</a>
+  </div>
+ {% endif %}   -->
+
+<!-- *********************************************************************** -->
+
+
+
+
+
+
+<!-- *************************************************************************** -->
+
+
+
+
+
+
+{% endblock %}

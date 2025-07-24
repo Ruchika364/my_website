@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block title %}Daily Garbage Map{% endblock %}
+
+{% block content %}
+<h1>Garbage points Map</h1>
+
+<div id="map" style="height: 600px; width: 100%;"></div>
+
+{% endblock %}
+
+{% block extra_js %}
+<!-- Google Maps JS API -->
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCdj4rf58uMjBm-MhlR692jq_1GnDcAJeY&callback=initMap"async
+  defer></script>
+
+<script>
+    function initMap() {
+        const map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 13,
+            center: { lat: 26.12, lng: 85.39 },  // Muzaffarpur center
+        });
+
+        const markers = [
+            {% for detection in detections %}
+            {
+                position: { lat: {{ detection.latitude }}, lng: {{ detection.longitude }} },
+                title: "Garbage Detected",
+            },
+            {% endfor %}
+        ];
+
+        // Add marker clustering library
+        const markerObjects = markers.map((location) => {
+            return new google.maps.Marker({
+                position: location.position,
+                title: location.title,
+            });
+        });
+
+        const markerCluster = new markerClusterer.MarkerClusterer({ map, markers: markerObjects });
+    }
+
+    // window.onload = initMap;
+</script>
+
+<!-- MarkerClusterer library -->
+<script src="https://unpkg.com/@googlemaps/markerclusterer/dist/index.min.js"></script>
+{% endblock %}

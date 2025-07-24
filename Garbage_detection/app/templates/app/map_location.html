@@ -1,0 +1,67 @@
+
+
+
+
+{% extends 'base.html' %}
+
+{% block title %}Garbage Location Map{% endblock %}
+
+{% block extra_css %}
+<!-- No Leaflet CSS needed for Google Maps -->
+{% endblock %}
+
+{% block content %}
+<div class="container">
+<h1>Garbage Location Map</h1>
+
+<div id="map" style="height: 500px; width: 100%;"></div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<!-- Google Maps JS API -->
+<script
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCdj4rf58uMjBm-MhlR692jq_1GnDcAJeY&callback=initMap"
+  async
+  defer>
+ </script>
+<script>
+    function initMap() {
+        var latitude = parseFloat("{{ detection.latitude }}");
+        var longitude = parseFloat("{{ detection.longitude }}");
+        var location = { lat: latitude, lng: longitude };
+
+        const map = new google.maps.Map(document.getElementById("map"), {
+            center: location,
+            zoom: 18,
+            mapTypeId: 'satellite',       // Optional: satellite view
+            mapTypeControl: true,
+            streetViewControl: true,      // Enables Pegman Street View button
+            zoomControl: true,
+        });
+
+        const marker = new google.maps.Marker({
+            position: location,
+            map: map,
+            title: 'Garbage Detected Here'
+        });
+
+        const infowindow = new google.maps.InfoWindow({
+            content: '<b>Garbage Detected Here</b>'
+        });
+
+        marker.addListener('click', function() {
+            infowindow.open(map, marker);
+        });
+
+        // Open popup by default
+        infowindow.open(map, marker);
+    }
+
+    window.onload = initMap;
+</script>
+
+<!-- </div> -->
+{% endblock %}
+
+

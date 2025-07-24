@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block title %}All Garbage Detections{% endblock %}
+
+{% block content %}
+<div class="container">
+
+<!-- <h1>{{detections}}</h1> -->
+<div style="text-align: right; margin-bottom: 10px;">
+    <label for="filter">Filter:</label>
+    <select id="filter" onchange="filterDetections(this.value)">
+    
+        <option value="all">All</option>
+        <option value="today">Today</option>
+        <option value="week">This Week</option>
+        <option value="month">This Month</option>
+    </select>
+</div>
+
+{% if detections %}
+<table>
+    <thead>
+        <tr>
+            <th>Image</th>
+            <th>Detected At</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for detection in detections %}
+        <tr>
+            <td>
+                {% if detection.image %}
+                    <img src="{{ detection.image.url }}" alt="Detection Image" width="100">
+                {% else %}
+                    No Image
+                {% endif %}
+            </td>
+            <td>{{ detection.detections_today }}</td>
+            <td>{{ detection.status }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+    <p>No detections found.</p>
+{% endif %}
+</div>
+{% endblock %}

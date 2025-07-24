@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block title %}Garbage Location Map{% endblock %}
+
+{% block content %}
+<div class="container">
+  <h1>Garbage Location Map</h1>
+
+  <div id="map" style="height: 500px; width: 100%;"></div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<!-- ============================= -->
+<!-- Leaflet CSS & JS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+   crossorigin="" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+ crossorigin=""></script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    var latitude = parseFloat("{{ detection.latitude }}");
+    var longitude = parseFloat("{{ detection.longitude }}");
+
+    var map = L.map('map').setView([latitude, longitude], 18);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+
+    L.marker([latitude, longitude]).addTo(map)
+      .bindPopup("<b>Garbage Detected Here</b>")
+      .openPopup();
+  });
+</script>
+<!-- ============================= -->
+{% endblock %}
