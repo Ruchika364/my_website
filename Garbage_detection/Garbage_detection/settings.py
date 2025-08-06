@@ -35,9 +35,11 @@ SECRET_KEY = 'django-insecure-f4ywhi1_2284f&k)gbsg8y1@*&$hp+w4zamc5^3xvfea+m@ov@
 DEBUG = True
 
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["10.222.225.252", "localhost", "127.0.0.1"]
 
 
+# Allow requests from any origin (only for testing):
+CORS_ALLOW_ALL_ORIGINS = True
 
 
 # Application definition
@@ -50,6 +52,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'app',
+    'rest_framework',
+    'corsheaders',
+
 ]
 
 MIDDLEWARE = [
@@ -60,6 +65,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
 ]
 
 ROOT_URLCONF = 'Garbage_detection.urls'
@@ -94,6 +101,7 @@ DATABASES = {
         'PASSWORD': '12345',  # your database user's password
         'HOST': 'localhost',
         'PORT': '5432',
+        
     }
 }
 

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Upload Video & Metadata</title>
+</head>
+<body>
+    <h1>Upload Video and Metadata</h1>
+
+    <form method="POST" enctype="multipart/form-data" action="{% url 'upload' %}">
+        {% csrf_token %}
+        <label for="video">Video File (.mp4):</label>
+        <input type="file" name="video" accept="video/mp4" required><br><br>
+
+        <label for="metadata">Metadata File (.json):</label>
+        <input type="file" name="metadata" accept=".json" required><br><br>
+
+        <button type="submit">Upload</button>
+    </form>
+</body>
+</html>

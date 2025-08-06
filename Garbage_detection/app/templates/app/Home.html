@@ -5,6 +5,13 @@
 
 {% block content %}
 
+
+{% if request.GET.uploaded == "true" %}
+  <script>
+    alert("Video from app has been uploaded successfully!");
+  </script>
+{% endif %}
+
 <!-- BUTTON HERE -->
   <div style="text-align: right; margin: 10px 0;">
     <a href="{% url 'daily_map' %}" style="background-color: #4e5350; color: white; padding: 8px 12px; text-decoration: none; border-radius: 4px;position: relative; top: 140px;margin-right: 80px;">
@@ -254,7 +261,7 @@
             <!-- <td>{{ detection.status }}</td> -->
           
           <td>
-            {% if not user|has_group:"Workers" %}
+            {% if not user|has_group:"Workers" %} 
               <form method="POST" action="{% url 'update_status' detection.id %}">
                 {% csrf_token %}
                 <select name="status" onchange="this.form.submit()">

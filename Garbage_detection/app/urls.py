@@ -1,8 +1,11 @@
 from django.urls import path
+# from .views import VideoWithMetadataUploadView
 from . import views
 from django.contrib.auth import views as auth_views
 from django.conf import settings
 from django.conf.urls.static import static
+from .views import test_upload_page
+import app.views as views
 
 urlpatterns = [
     path('', views.home_page, name='home_page'),
@@ -12,12 +15,13 @@ urlpatterns = [
     path('daily_map2/', views.daily_map, name='daily_map'),
     path('login/', views.my_login, name='login'),
     path('logout/', auth_views.LogoutView.as_view(next_page='login'), name='logout'),
-    
     path('delete_cleaned/', views.delete_cleaned, name='delete_cleaned'),
-    
-
     path('upload/', views.upload_video, name='upload'),
     path('upload_detection_image/<int:pk>/', views.upload_detection_image, name='upload_detection_image'),
+    # path('upload-video-with-metadata/', VideoWithMetadataUploadView.as_view(), name='upload-video-with-metadata'),
+    path('upload-history/', views.upload_history, name='upload_history'),
+    path('run-detection/<int:video_id>/', views.run_detection, name='run_detection'),
+    path('test_upload/', test_upload_page, name='test_upload_page'),
 
 
 ]

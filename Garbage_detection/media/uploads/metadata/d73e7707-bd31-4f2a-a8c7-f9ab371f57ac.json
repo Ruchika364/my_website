@@ -1,0 +1,53 @@
+{
+  "location_data": [
+    {
+      "accuracy": 12.845,
+      "altitude": 3.8999998569488525,
+      "bearing": 112.92399,
+      "frame_number": 0,
+      "latitude": 26.1186442,
+      "longitude": 85.39177,
+      "relative_time_ms": 7131,
+      "speed": 0.6561978,
+      "timestamp": 1753787538032
+    },
+    {
+      "accuracy": 7.792,
+      "altitude": 3.5,
+      "bearing": 308.0354,
+      "frame_number": 1,
+      "latitude": 26.1189858,
+      "longitude": 85.3916119,
+      "relative_time_ms": 14148,
+      "speed": 2.279404,
+      "timestamp": 1753787545049
+    },
+    {
+      "accuracy": 7.789,
+      "altitude": 3.5,
+      "bearing": 316.65994,
+      "frame_number": 2,
+      "latitude": 26.1191076,
+      "longitude": 85.3913961,
+      "relative_time_ms": 21194,
+      "speed": 3.687465,
+      "timestamp": 1753787552095
+    },
+    {
+      "accuracy": 8.339,
+      "altitude": 3.5,
+      "bearing": 335.70175,
+      "frame_number": 3,
+      "latitude": 26.1193136,
+      "longitude": 85.3912814,
+      "relative_time_ms": 28223,
+      "speed": 3.4057672,
+      "timestamp": 1753787559124
+    }
+  ],
+  "location_update_interval_ms": 1000,
+  "recording_duration_ms": 33932,
+  "recording_start_time": 1753787530901,
+  "total_location_points": 4,
+  "video_name": "2025-07-29-16-42-10-760"
+}
