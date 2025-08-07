@@ -1,3 +1,5 @@
+#----------------------------------OLD------------------------------View.py
+
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth import login as auth_login
 from django.shortcuts import render, get_object_or_404,redirect
@@ -71,9 +73,7 @@ def my_login(request):
 #--------------------------------------------YOLO_MODEL--------------------------------------------------------------------------
 
 
-# model = YOLO('C:\\Website\\Garbage_detection_website\\Garbage_detection\\models\\best.pt')
 model = YOLO('D:\\Website\\Garbage_detection_website\\Garbage_detection\\models\\best.pt')
-
 
 #--------------------------------------------HOME_PAGE--------------------------------------------------------------------------
 
@@ -313,23 +313,49 @@ def all_detections_view(request):
 
 #----------------------------------------------UPLOAD---------------------------------------------------------------
 
+# @csrf_exempt
+# def upload_video(request):
+    
+#     print("Received request method:", request.method)
+
+#     if request.method == "POST":
+#         video = request.FILES.get('video')
+#         metadata_str = request.POST.get('metadata')
+
+#         if video:
+#              # ✅ Generate a unique filename and save path
+#             filename = f"{uuid.uuid4()}.mp4"
+#             save_path = os.path.join(settings.MEDIA_ROOT, filename)
+
+#             with open(save_path, 'wb+') as destination:
+#                 for chunk in video.chunks():
+#                     destination.write(chunk)
+#             print("Saved to:", save_path) 
+
+#             # ✅ Optional: save metadata as JSON file with same name
+#             json_name = video_name.replace('.mp4', '.json')
+#             json_path = os.path.join(settings.MEDIA_ROOT, json_name)
+#             with open(json_path, 'w') as json_file:
+#                 json.dump(metadata, json_file, indent=2)
+#             print("Saved metadata to:", json_path)
+
+
+#             return JsonResponse({"status": "success", "video_file": video_name, "metadata_file": json_name})
+      
+#     else:
+#         return JsonResponse({"status": "failed", "reason": "Only POST allowed"})
+
+
+
 @csrf_exempt
 def upload_video(request):
-    print("🚀 Received request method:", request.method)
-    print("📂 FILES received:", request.FILES)
+    print("Received request method:", request.method)
 
     if request.method == "POST":
-        # video = request.FILES.get('video_file')
-        # metadata_file = request.FILES.get('metadata')  # file, not string
-
-        request.FILES['video'] = request.FILES.get('video_file')
-        request.FILES['metadata'] = request.FILES.get('json_file')
-
         video = request.FILES.get('video')
-        metadata_file = request.FILES.get('metadata')
+        metadata_file = request.FILES.get('metadata')  # file, not string
 
         if not video:
-            print("❌ No video file found in request.")
             return JsonResponse({"status": "failed", "reason": "No video file provided"})
 
         # Save video to uploads/videos/
@@ -337,89 +363,50 @@ def upload_video(request):
         video_path = os.path.join(settings.MEDIA_ROOT, 'uploads', 'videos', video_filename)
         os.makedirs(os.path.dirname(video_path), exist_ok=True)
 
-        print(f"📁 Saving video to path: {video_path}")
         with open(video_path, 'wb+') as destination:
             for chunk in video.chunks():
                 destination.write(chunk)
-        print("✅ Video saved successfully.")
+
+        print("Saved video to:", video_path)
 
         # Save metadata (if provided) to uploads/metadata/
         json_filename = None
         json_data = None 
-
         if metadata_file:
-            print("📝 Metadata file received. Attempting to parse JSON...")
             try:
                 json_data = json.load(metadata_file)
-                print("✅ JSON metadata parsed successfully:", json_data)
-            except json.JSONDecodeError as e:
-                print("❌ Failed to decode JSON:", str(e))
+            except json.JSONDecodeError:
                 return JsonResponse({"status": "failed", "reason": "Invalid JSON file"})
 
             json_filename = video_filename.replace('.mp4', '.json')
             json_path = os.path.join(settings.MEDIA_ROOT, 'uploads', 'metadata', json_filename)
             os.makedirs(os.path.dirname(json_path), exist_ok=True)
 
-            print(f"📁 Saving metadata to path: {json_path}")
             with open(json_path, 'w') as f:
                 json.dump(json_data, f, indent=2)
-            print("✅ Metadata saved successfully.")
 
-        # # ✅ Prepare data for DB insertion
-        # data = {
-        #     "video": f"uploads/videos/{video_filename}",
-        #     "metadata_file": f"uploads/metadata/{json_filename}" if json_filename else None,
-        #     "latitude": json_data.get("latitude") if json_data else None,
-        #     "longitude": json_data.get("longitude") if json_data else None,
-        #     "date": json_data.get("date") if json_data else None,
-        #     "time": json_data.get("time") if json_data else None,
-        # }
+            print("Saved metadata to:", json_path)
 
-        # ✅ Prepare data for DB insertion
-        location_data = json_data.get("location_data", []) if json_data else []
-        latitude = longitude = date = time = None
-
-        if location_data:
-            first_point = location_data[0]
-            latitude = first_point.get("latitude")
-            longitude = first_point.get("longitude")
-
-            timestamp_ms = first_point.get("timestamp")
-            if timestamp_ms:
-                from datetime import datetime
-                dt = datetime.fromtimestamp(timestamp_ms / 1000)
-                date = dt.date()
-                time = dt.time()
-
+        # ✅ Save to database
+       
         data = {
             "video": f"uploads/videos/{video_filename}",
             "metadata_file": f"uploads/metadata/{json_filename}" if json_filename else None,
-            "latitude": latitude,
-            "longitude": longitude,
-            "date": date,
-            "time": time,
+            "latitude": json_data.get("latitude") if json_data else None,
+            "longitude": json_data.get("longitude") if json_data else None,
+            "date": json_data.get("date") if json_data else None,
+            "time": json_data.get("time") if json_data else None,
         }
-
-
-        print("📦 Data to be saved in DB:", data)
-
-        # ✅ Save to database
-        try:
-            VideoUpload.objects.create(**data)
-            print("✅ Data inserted into database.")
-        except Exception as e:
-            print("❌ Database insert failed:", str(e))
-            return JsonResponse({"status": "failed", "reason": "Database insert error"})
-
+          
+        VideoUpload.objects.create(**data)
+       
         return JsonResponse({
             "status": "success",
             "video_file": video_filename,
             "metadata_file": json_filename
         })
 
-    print("❌ Request method not allowed.")
     return JsonResponse({"status": "failed", "reason": "Only POST method allowed"})
-
 
 
 #-------------------------------------------UPLOAD IMAGE -----------------------------------------------------------

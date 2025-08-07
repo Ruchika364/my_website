@@ -35,7 +35,7 @@ SECRET_KEY = 'django-insecure-f4ywhi1_2284f&k)gbsg8y1@*&$hp+w4zamc5^3xvfea+m@ov@
 DEBUG = True
 
 
-ALLOWED_HOSTS = ["10.222.225.252", "localhost", "127.0.0.1"]
+ALLOWED_HOSTS = ["192.168.82.252", "localhost", "127.0.0.1"]
 
 
 # Allow requests from any origin (only for testing):
