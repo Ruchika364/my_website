@@ -1,0 +1,99 @@
+{
+  "location_data": [
+    {
+      "accuracy": 33.256,
+      "altitude": 0.6000000238418579,
+      "frame_number": 0,
+      "latitude": 26.1039856,
+      "longitude": 85.4054777,
+      "relative_time_ms": 136,
+      "speed": 0.07545056,
+      "timestamp": 1754654341972
+    },
+    {
+      "accuracy": 26.4,
+      "altitude": 1.0,
+      "frame_number": 1,
+      "latitude": 26.1039802,
+      "longitude": 85.4054657,
+      "relative_time_ms": 7176,
+      "speed": 0.07901974,
+      "timestamp": 1754654349012
+    },
+    {
+      "accuracy": 20.0,
+      "altitude": 0.6000000238418579,
+      "frame_number": 2,
+      "latitude": 26.1039738,
+      "longitude": 85.4054721,
+      "relative_time_ms": 21197,
+      "speed": 0.08526612,
+      "timestamp": 1754654363033
+    },
+    {
+      "accuracy": 20.0,
+      "altitude": 1.0,
+      "frame_number": 3,
+      "latitude": 26.1039719,
+      "longitude": 85.4054686,
+      "relative_time_ms": 28222,
+      "speed": 0.07291185,
+      "timestamp": 1754654370058
+    },
+    {
+      "accuracy": 20.0,
+      "altitude": 1.0,
+      "frame_number": 4,
+      "latitude": 26.1039722,
+      "longitude": 85.4054702,
+      "relative_time_ms": 35227,
+      "speed": 0.028238049,
+      "timestamp": 1754654377063
+    },
+    {
+      "accuracy": 18.239,
+      "altitude": 1.0,
+      "frame_number": 5,
+      "latitude": 26.1039702,
+      "longitude": 85.4054665,
+      "relative_time_ms": 42248,
+      "speed": 0.08727903,
+      "timestamp": 1754654384084
+    },
+    {
+      "accuracy": 26.4,
+      "altitude": 1.0,
+      "frame_number": 6,
+      "latitude": 26.1039731,
+      "longitude": 85.4054714,
+      "relative_time_ms": 49257,
+      "speed": 0.09900026,
+      "timestamp": 1754654391093
+    },
+    {
+      "accuracy": 20.0,
+      "altitude": 1.0,
+      "frame_number": 7,
+      "latitude": 26.1039728,
+      "longitude": 85.4054703,
+      "relative_time_ms": 56280,
+      "speed": 0.016884578,
+      "timestamp": 1754654398116
+    },
+    {
+      "accuracy": 20.0,
+      "altitude": 1.0,
+      "frame_number": 8,
+      "latitude": 26.1039717,
+      "longitude": 85.4054681,
+      "relative_time_ms": 63292,
+      "speed": 0.05412028,
+      "timestamp": 1754654405128
+    }
+  ],
+  "location_update_interval_ms": 1000,
+  "recording_duration_ms": 67274,
+  "recording_start_time": 1754654341836,
+  "total_location_points": 9,
+  "video_name": "2025-08-08-17-29-01-475"
+}

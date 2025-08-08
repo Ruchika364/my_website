@@ -35,9 +35,17 @@
                 <td>{{ upload.longitude }}</td>
                 <td>{{ upload.uploaded_at }}</td>
                 <td>
+                     <!-- Run Detection Button -->
                     <form method="POST" action="{% url 'run_detection' upload.id %}">
                         {% csrf_token %}
                         <button type="submit" class="btn btn-primary btn-sm">Run Detection</button>
+                    </form>
+
+                    <!-- Delete Video Button -->
+                     <form action="{% url 'delete_video' upload.id %}" method="post" style="display:inline;" 
+                        onsubmit="return confirm('Are you sure you want to delete this video?');">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
                     </form>
                 </td>
             </tr>
@@ -46,3 +54,5 @@
     </table>
 </div>
 {% endblock %}
+
+   

@@ -17,6 +17,7 @@ import os
 #So BASE_DIR points to your project’s root folder. So For this project this is    D:\Website\Garbage_detection_website\Garbage_detection
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+MODEL_PATH = os.path.join(BASE_DIR, 'models', 'best.pt')
 
 
 
@@ -35,7 +36,7 @@ SECRET_KEY = 'django-insecure-f4ywhi1_2284f&k)gbsg8y1@*&$hp+w4zamc5^3xvfea+m@ov@
 DEBUG = True
 
 
-ALLOWED_HOSTS = ["192.168.82.252", "localhost", "127.0.0.1"]
+ALLOWED_HOSTS = ["10.251.20.252", "localhost", "127.0.0.1"]
 
 
 # Allow requests from any origin (only for testing):

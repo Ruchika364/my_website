@@ -1,0 +1,19 @@
+{
+  "location_data": [
+    {
+      "accuracy": 181.29,
+      "altitude": 0.4999999701976776,
+      "frame_number": 0,
+      "latitude": 26.1041955,
+      "longitude": 85.4054586,
+      "relative_time_ms": 14209,
+      "speed": 0.0,
+      "timestamp": 1754570999031
+    }
+  ],
+  "location_update_interval_ms": 1000,
+  "recording_duration_ms": 19529,
+  "recording_start_time": 1754570984822,
+  "total_location_points": 1,
+  "video_name": "2025-08-07-18-19-44-461"
+}

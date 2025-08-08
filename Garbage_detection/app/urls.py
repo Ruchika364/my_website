@@ -22,7 +22,7 @@ urlpatterns = [
     path('upload-history/', views.upload_history, name='upload_history'),
     path('run-detection/<int:video_id>/', views.run_detection, name='run_detection'),
     path('test_upload/', test_upload_page, name='test_upload_page'),
-
+    path('delete_video/<int:video_id>/', views.delete_video, name='delete_video'),
 
 ]
 

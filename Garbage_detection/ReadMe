@@ -1,0 +1,5 @@
+1. Database: Postgre
+2. Videos is getting saved directly in disk not in postgre but it won't be a problem cause
+    VPS provide 100GB of space. There is no meaning in storing old videos
+
+3. 

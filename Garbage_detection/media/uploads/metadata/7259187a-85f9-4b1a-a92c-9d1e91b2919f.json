@@ -1,0 +1,20 @@
+{
+  "location_data": [
+    {
+      "accuracy": 73.0,
+      "altitude": 0.4999999701976776,
+      "bearing": 22.84987,
+      "frame_number": 0,
+      "latitude": 26.1040358,
+      "longitude": 85.4054626,
+      "relative_time_ms": 14246,
+      "speed": 0.16284466,
+      "timestamp": 1754656362758
+    }
+  ],
+  "location_update_interval_ms": 1000,
+  "recording_duration_ms": 22830,
+  "recording_start_time": 1754656348512,
+  "total_location_points": 1,
+  "video_name": "2025-08-08-18-02-28-174"
+}

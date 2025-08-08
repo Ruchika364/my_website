@@ -17,7 +17,6 @@ from django.db.models import Q
 from django.contrib import messages
 from .forms import GarbageDetectionForm
 from django.views.decorators.csrf import csrf_exempt
-import os
 from django.db import models
 import uuid
 from rest_framework.views import APIView
@@ -71,9 +70,9 @@ def my_login(request):
 #--------------------------------------------YOLO_MODEL--------------------------------------------------------------------------
 
 
-# model = YOLO('C:\\Website\\Garbage_detection_website\\Garbage_detection\\models\\best.pt')
-model = YOLO('D:\\Website\\Garbage_detection_website\\Garbage_detection\\models\\best.pt')
+# model = YOLO('D:\\Website\\Garbage_detection_website\\Garbage_detection\\models\\best.pt')
 
+model = YOLO(settings.MODEL_PATH)
 
 #--------------------------------------------HOME_PAGE--------------------------------------------------------------------------
 
@@ -319,8 +318,8 @@ def upload_video(request):
     print("📂 FILES received:", request.FILES)
 
     if request.method == "POST":
-        # video = request.FILES.get('video_file')
-        # metadata_file = request.FILES.get('metadata')  # file, not string
+        
+        
 
         request.FILES['video'] = request.FILES.get('video_file')
         request.FILES['metadata'] = request.FILES.get('json_file')
@@ -342,6 +341,7 @@ def upload_video(request):
             for chunk in video.chunks():
                 destination.write(chunk)
         print("✅ Video saved successfully.")
+        
 
         # Save metadata (if provided) to uploads/metadata/
         json_filename = None
@@ -365,16 +365,7 @@ def upload_video(request):
                 json.dump(json_data, f, indent=2)
             print("✅ Metadata saved successfully.")
 
-        # # ✅ Prepare data for DB insertion
-        # data = {
-        #     "video": f"uploads/videos/{video_filename}",
-        #     "metadata_file": f"uploads/metadata/{json_filename}" if json_filename else None,
-        #     "latitude": json_data.get("latitude") if json_data else None,
-        #     "longitude": json_data.get("longitude") if json_data else None,
-        #     "date": json_data.get("date") if json_data else None,
-        #     "time": json_data.get("time") if json_data else None,
-        # }
-
+       
         # ✅ Prepare data for DB insertion
         location_data = json_data.get("location_data", []) if json_data else []
         latitude = longitude = date = time = None
@@ -489,4 +480,25 @@ def run_detection(request, video_id):
     cap.release()
     messages.success(request, "Detection run successfully.")
     return redirect('upload_history')
+
+# -------------------------------------------------DELETE_VIDEO_BUTTON------------------------------------------------------
+
+from django.shortcuts import get_object_or_404, redirect
+
+from .models import VideoUpload  
+
+def delete_video(request, video_id):
+    video = get_object_or_404(VideoUpload, id=video_id)
+    
+    # Delete the file from storage
+    if video.video:
+        file_path = os.path.join(settings.MEDIA_ROOT, str(video.video))
+        if os.path.exists(file_path):
+            os.remove(file_path)
+
+    # Delete DB entry
+    video.delete()
+
+    messages.success(request, "Video deleted successfully!")
+    return redirect('upload_history')  # Replace with your upload history page name
 
